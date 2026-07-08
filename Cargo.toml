@@ -1,6 +1,6 @@
 [package]
 name = "rsomics-closeness-vitality"
-version = "0.1.0"
+version = "0.1.1"
 description = "Closeness vitality of nodes in an undirected, unweighted graph — value-exact networkx 3.6.1 equivalent"
 edition = "2021"
 license = "MIT OR Apache-2.0"

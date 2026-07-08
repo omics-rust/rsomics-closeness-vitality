@@ -265,6 +265,16 @@ fn gnm25_all_nodes() {
 }
 
 #[test]
+fn inline_hash_comment_matches_uncommented() {
+    // A `#` starts a comment anywhere in a line (nx.parse_edgelist), so a `#`
+    // fused to a token and a whole-line comment must not alter the graph.
+    let with_comments = graph_from_str("0 1\n1 2#c\n# whole-line comment\n2 3\n");
+    let plain = graph_from_str("0 1\n1 2\n2 3\n");
+    assert_eq!(with_comments.labels, plain.labels);
+    assert_eq!(with_comments.adj, plain.adj);
+}
+
+#[test]
 fn connectivity_detection() {
     // A connected graph (path) and a two-component graph. Closeness vitality is
     // only defined on the connected one; the CLI rejects the disconnected case

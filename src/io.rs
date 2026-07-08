@@ -21,9 +21,11 @@ impl Graph {
 
 /// Parse an undirected edge list, matching `nx.read_edgelist` / `nx.Graph`.
 ///
-/// Lines starting with `#` or blank are skipped. Each data line needs at
-/// least two whitespace-separated tokens; extras are ignored. Self-loops are
-/// dropped. Duplicate edges collapse to a simple graph in first-seen order.
+/// A `#` begins a comment anywhere in a line; text from the first `#` on is
+/// dropped before tokenising, and lines empty afterwards are skipped. Each
+/// data line needs at least two whitespace-separated tokens; extras are
+/// ignored. Self-loops are dropped. Duplicate edges collapse to a simple
+/// graph in first-seen order.
 pub fn read_edgelist(path: Option<&Path>) -> Result<Graph> {
     let reader: Box<dyn BufRead> = match path {
         None => Box::new(BufReader::new(std::io::stdin())),
@@ -50,8 +52,9 @@ pub fn read_edgelist_str(input: &str) -> Result<Graph> {
 
     for (lineno, line) in input.lines().enumerate() {
         let lineno = lineno + 1;
-        let t = line.trim();
-        if t.is_empty() || t.starts_with('#') {
+        // nx.parse_edgelist strips a '#' comment anywhere in the line before tokenising.
+        let t = line.split('#').next().unwrap_or("").trim();
+        if t.is_empty() {
             continue;
         }
         let mut tokens = t.split_ascii_whitespace();
